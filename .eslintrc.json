@@ -1,0 +1,20 @@
+{
+  "plugins": [
+    "react"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "rules": {
+    "no-set-state": "off"
+  },
+  "ignorePatterns": [
+    "build/",
+    "node_modules/",
+    "public/"
+  ]
+}
