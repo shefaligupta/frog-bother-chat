@@ -1,28 +1,21 @@
 import React, {useRef, useState} from 'react';
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import '../css/App.css';
-import HenchmenList from "./HenchmenList";
-import ChatHistory from "./ChatHistory";
+import HenchmenList from './HenchmenList';
+import ChatHistory from './ChatHistory';
 
 /**
  * App Class
  * @returns {*}
  * @constructor
  */
-function App() {
+const App = () => {
   const [message, setMessage] = useState('');
-  const [chatHistory, setChatHistory] = useState(new Map());
+  const [chat, setChat] = useState(new Map());
   const [henchman, setHenchman] = useState('Sonny');
 
   const inputEl = useRef(null);
-
-  /**
-   * sets focus on message input box.
-   */
-  const setFocus = () => {
-    inputEl.current.focus();
-  };
 
   /**
    * sends the message i.e. calls the setter for chatHistory map
@@ -34,10 +27,14 @@ function App() {
       message,
       henchman,
     };
-    const chat = chatHistory.get(henchman) || [];
-    setChatHistory(chatHistory.set(henchman, [...chat, newMessage]));
+    let chatForHenchman = chat.get(henchman) || {draft: '', history: []};
+    chatForHenchman = {
+      history: [...chatForHenchman.history, newMessage],
+      draft: '',
+    };
+    setChat(chat.set(henchman, chatForHenchman));
     setMessage('');
-  }
+  };
 
   /**
    * sends message on enter.
@@ -45,11 +42,11 @@ function App() {
    * @param {Object} event
    */
   const sendMessageOnEnter = (event) => {
-    if (event.key === 'Enter' && henchman) {
+    if (event.key === 'Enter' && henchman && message.length > 0) {
       setMessage(event.target.value);
       sendMessage();
     }
-  }
+  };
 
   /**
    * sets henchman name and focus on message input box.
@@ -57,9 +54,35 @@ function App() {
    * @param {string} name
    */
   const setHenchmanAndFocus = (name) => {
+    const chatForHenchman = chat.get(name);
+    const draft = chatForHenchman ? chatForHenchman.draft : '';
+    setMessage(draft);
     setHenchman(name);
-    setFocus();
-  }
+    inputEl.current.focus();
+  };
+
+  /**
+   * get chat history for henchman.
+   *
+   * @returns {*}
+   */
+
+  const getChatHistory = () => {
+    const chatForHenchman = chat.get(henchman);
+    return chatForHenchman ? chatForHenchman.history : undefined;
+  };
+
+  /**
+   * sets drafts message for the henchman.
+   *
+   * @param {Object} event
+   */
+  const setChatDraftForHenchman = (event) => {
+    const chatForHenchman = chat.get(henchman) || {draft: '', history: []};
+    chatForHenchman.draft = event.target.value;
+    setChat(chat.set(henchman, chatForHenchman));
+    setMessage(event.target.value);
+  };
 
   return (
       <div className="app">
@@ -67,18 +90,18 @@ function App() {
           <h4 className="app-title">Frog Bother Chat</h4>
           <h4>Vito Croakleone</h4>
         </header>
-        <div className="chat-window">
+        <div className="chat-window" alt="chat-window">
           <HenchmenList setHenchman={(name) => setHenchmanAndFocus(name)} man={henchman}/>
-          <ChatHistory chatHistory={chatHistory.get(henchman)}/>
+          <ChatHistory chatHistory={getChatHistory()}/>
         </div>
         <div className="write-message">
           <TextField
               className="type-message"
-              id="message-value"
               value={message}
-              label="Message"
+              label="message-input"
+              aria-labelledby="message-input"
               variant="outlined"
-              onChange={(event) => setMessage(event.target.value)}
+              onChange={(event) => setChatDraftForHenchman(event)}
               onKeyPress={(event) => sendMessageOnEnter(event)}
               inputRef={inputEl}
           />
@@ -86,7 +109,7 @@ function App() {
               disableElevation
               variant="contained"
               className="send-message"
-              disabled={henchman.length === 0}
+              disabled={henchman.length === 0 || message.length === 0}
               onClick={(event) => sendMessage(event)}
           >
             Send
@@ -94,6 +117,6 @@ function App() {
         </div>
       </div>
   );
-}
+};
 
 export default App;

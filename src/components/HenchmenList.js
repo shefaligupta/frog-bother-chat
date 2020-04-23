@@ -8,16 +8,16 @@ import Button from '@material-ui/core/Button';
  * @returns {*}
  * @constructor
  */
-function HenchmenList({setHenchman, man}) {
+const HenchmenList = ({setHenchman, man}) => {
   const allHenchmen = ['Sonny', 'Fredo', 'Michael'];
   return (
       <div className="henchman">
         {
-          allHenchmen.map((henchman, index) => (
-              <div key={`Henchman-${index}`} className="button-henchmen">
+          allHenchmen.map((henchman) => (
+              <div key={`Henchman-${henchman}`} className="button-henchmen">
                 <Button
                     variant="contained"
-                    className={man === henchman ? `active-button` : `select-henchman`}
+                    className={man === henchman ? 'active-button' : 'select-henchman'}
                     disableElevation
                     onClick={() => setHenchman(henchman)}
                 >
@@ -28,6 +28,6 @@ function HenchmenList({setHenchman, man}) {
         }
       </div>
   );
-}
+};
 
 export default HenchmenList;
