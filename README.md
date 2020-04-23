@@ -1,17 +1,17 @@
 ## Frog Bother Chat
 
-###Description
+### Description
 
 The frontend chat application for Vito Croakleone.
 
-###How to run
+### How to run
 
 1. git clone repo
 2. run ``npm i``
 3. run ``npm start`` to locally run the app on port 3000
 4. run ``npm test`` to run the eslint and jest
 
-###Features
+### Features
 1. Built with create-react-app starter.
 2. Responsive UI
 3. Maintains chat history in memory till reload.
